@@ -10,10 +10,11 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB Connection
-mongoose.connect('mongodb://localhost:27017/busTrackingDB', {
+mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
+
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -95,7 +96,7 @@ const calculateDistance = (lat1, lon1, lat2, lon2) => {
   const R = 6371; // Earth's radius in km
   const dLat = (lat2 - lat1) * Math.PI / 180;
   const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a = 
+  const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
     Math.sin(dLon / 2) * Math.sin(dLon / 2);
@@ -216,7 +217,7 @@ app.get('/api/buses/:busNumber', authenticateToken, async (req, res) => {
   try {
     const { busNumber } = req.params;
     const bus = await Bus.findOne({ busNumber });
-    
+
     if (!bus) {
       return res.status(404).json({ message: 'Bus not found' });
     }
@@ -232,7 +233,7 @@ app.post('/api/buses/track', authenticateToken, async (req, res) => {
     const { busNumber, userLatitude, userLongitude } = req.body;
 
     const bus = await Bus.findOne({ busNumber, isActive: true });
-    
+
     if (!bus) {
       return res.status(404).json({ message: 'Bus not found' });
     }
@@ -515,9 +516,9 @@ app.post('/api/seed', async (req, res) => {
 
     await Bus.insertMany(buses);
 
-    res.json({ 
+    res.json({
       message: 'Database seeded successfully',
-      busesCount: buses.length 
+      busesCount: buses.length
     });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -525,7 +526,6 @@ app.post('/api/seed', async (req, res) => {
 });
 
 // Start server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+module.exports = app;
+
+
