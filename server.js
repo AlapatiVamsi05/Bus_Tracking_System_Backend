@@ -7,9 +7,9 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: "https://bus-tracking-system-frontend.vercel.app",
+  origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
 app.use(express.json());
