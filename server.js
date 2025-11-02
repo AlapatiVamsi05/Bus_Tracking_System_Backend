@@ -536,6 +536,10 @@ app.post('/api/seed', async (req, res) => {
   }
 });
 
+app.get('/', (req, res) => {
+  res.send('Bus Tracking System Backend is running');
+});
+
 // Start server
 module.exports = app;
 
